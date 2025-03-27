@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html data-bs-theme="light">
+<head>
+    <title>Kelime Öğrenme Uygulaması</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #dc3545;
+            --primary-hover: #c82333;
+        }
+        
+        body {
+            background-color: var(--bs-body-bg);
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--primary-color) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .word-card {
+            background: var(--bs-card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 15px rgba(220, 53, 69, 0.2);
+        }
+
+        .english-word {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .turkish-word {
+            color: var(--bs-body-color);
+            opacity: 0.8;
+            font-size: 1.2rem;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid var(--bs-border-color);
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--bs-body-color);
+            border: none;
+            padding: 10px 20px;
+            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .theme-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .theme-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: scale(1.1);
+        }
+
+        .bulk-import {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bs-card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+        }
+
+        .practice-card {
+            background: var(--bs-card-bg);
+            border-radius: 16px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            padding: 25px;
+            margin: 25px auto;
+            max-width: 450px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(220, 53, 69, 0.1);
+        }
+
+        .practice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), #ff6b6b, var(--primary-color));
+            background-size: 200% 100%;
+            animation: gradient 3s linear infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .practice-card .english-word {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            background: linear-gradient(45deg, var(--primary-color), #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .practice-card .turkish-word {
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.4s ease;
+            color: var(--bs-body-color);
+            font-weight: 500;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background: rgba(220, 53, 69, 0.05);
+            display: inline-block;
+            border: 1px solid rgba(220, 53, 69, 0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .practice-card .turkish-word.show {
+            opacity: 1;
+            transform: translateY(0);
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        .practice-controls {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .practice-controls button {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .practice-controls button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .practice-controls button:hover::before {
+            transform: translateX(100%);
+        }
+
+        .practice-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .practice-controls button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .practice-controls .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), #ff6b6b);
+        }
+
+        .practice-controls .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 500ms, transform 500ms;
+        }
+
+        .fade-exit {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-exit-active {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 500ms, transform 500ms;
+        }
+
+        .word-card .delete-word {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+            opacity: 0.8;
+        }
+
+        .word-card .delete-word:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-book-open me-2"></i>
+                Kelime Öğrenme
+            </a>
+            <div class="ms-auto">
+                <button class="theme-toggle-btn" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="practice-tab" data-bs-toggle="tab" data-bs-target="#practice" type="button" role="tab">
+                    <i class="fas fa-graduation-cap me-2"></i>Çalışma
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="words-tab" data-bs-toggle="tab" data-bs-target="#words" type="button" role="tab">
+                    <i class="fas fa-list me-2"></i>Kelimeler
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+                    <i class="fas fa-cog me-2"></i>Ayarlar
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="practice" role="tabpanel">
+                <div class="practice-card">
+                    <h3 class="english-word" id="practiceEnglishWord"></h3>
+                    <p class="turkish-word" id="practiceTurkishWord"></p>
+                    <div class="practice-controls">
+                        <button class="btn btn-primary" id="showAnswerBtn">
+                            <i class="fas fa-eye me-2"></i>Cevabı Göster
+                        </button>
+                        <button class="btn btn-success" id="nextWordBtn">
+                            <i class="fas fa-arrow-right me-2"></i>Sonraki Kelime
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="words" role="tabpanel">
+                <div class="row" id="wordsList">
+                    <!-- Kelimeler buraya dinamik olarak eklenecek -->
+                </div>
+            </div>
+            
+            <div class="tab-pane fade" id="settings" role="tabpanel">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-plus-circle me-2"></i>
+                            Yeni Kelime Ekle
+                        </h5>
+                        <form id="addWordForm">
+                            <div class="mb-3">
+                                <label for="englishWord" class="form-label">İngilizce Kelime</label>
+                                <input type="text" class="form-control" id="englishWord" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="turkishWord" class="form-label">Türkçe Kelime</label>
+                                <input type="text" class="form-control" id="turkishWord" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Kelime Ekle
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="bulk-import">
+                    <h5 class="card-title mb-3">
+                        <i class="fas fa-file-import me-2"></i>
+                        Toplu Kelime Ekle
+                    </h5>
+                    <p class="text-muted mb-3">
+                        Her satıra bir kelime çifti ekleyin. Format: İngilizce kelime | Türkçe kelime
+                    </p>
+                    <textarea class="form-control mb-3" id="bulkWords" rows="5" placeholder="hello | merhaba&#10;world | dünya&#10;book | kitap"></textarea>
+                    <button class="btn btn-primary" id="bulkImportBtn">
+                        <i class="fas fa-upload me-2"></i>Toplu İçe Aktar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="renderer.js"></script>
+</body>
+</html>
