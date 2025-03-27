@@ -37,14 +37,12 @@ npm start
 
 ## 🖥️ Screenshots
 
-### Main Form (Big Size)
-![Main Form](screenshots/main-form.png)
+![image](https://github.com/user-attachments/assets/ab883f25-71c5-4c00-89ce-b424d7dabacd)
 
-### Main Form (Small Size)
-![Main Form Small](screenshots/main-form-small.png)
+![image](https://github.com/user-attachments/assets/b52f73bc-e338-416c-82bb-7520141321d9)
 
-### Settings Form
-![Settings Form](screenshots/settings-form.png)
+![image](https://github.com/user-attachments/assets/878e24f8-778a-4be9-af4e-b5a0a2d754ee)
+
 
 ## 🛠️ Technologies Used
 
